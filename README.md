@@ -1,1 +1,1 @@
-# ppl-rental
+# ppl-auth
