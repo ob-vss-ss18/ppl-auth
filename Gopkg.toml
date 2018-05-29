@@ -1,2 +1,4 @@
 [metadata.heroku]
   root-package = "github.com/ob-vss-ss18/ppl-auth"
+  go-version = "1.10"
+  install = [ "." ]

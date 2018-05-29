@@ -1,2 +1,4 @@
+vendor/
+.env
 ppl-auth
-
+ppl-auth.exe
