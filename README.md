@@ -4,3 +4,16 @@
 [![Coverage Status](https://coveralls.io/repos/github/ob-vss-ss18/ppl-auth/badge.svg?branch=master)](https://coveralls.io/github/ob-vss-ss18/ppl-auth?branch=master)
 
 URL: [https://ppl-auth.herokuapp.com/](https://ppl-auth.herokuapp.com/)
+
+
+### Run locally:
+
+To build and install the application
+```sh
+go install
+```
+Load and use information from .env-File and runs the application `ppl-auth`
+```sh
+heroku local
+```
+To cofigure the datebase URL and the port .env-File must exist.
