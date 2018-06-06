@@ -1,8 +1,8 @@
 package main
 
 type User struct {
-	ID    int
-	Email string
+	ID    int    `json:"id"`
+	Email string `json:"email"`
 }
 
 func InsertUser(user *User) error {
@@ -21,7 +21,7 @@ func InsertUser(user *User) error {
 
 func GetUserByID(id int) (*User, error) {
 	var email string
-	err := db.QueryRow("SELECT email FROM users WHERE id=$1", id).Scan(&email)
+	err := db.QueryRow("SELECT email FROM users WHERE user_id=$1", id).Scan(&email)
 	if err != nil {
 		return nil, err
 	}

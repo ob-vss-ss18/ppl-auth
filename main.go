@@ -2,9 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -16,6 +13,7 @@ import (
 	_ "github.com/lib/pq"
 
 	"github.com/graphql-go/graphql"
+	"github.com/graphql-go/handler"
 )
 
 var db *sql.DB
@@ -23,10 +21,10 @@ var db *sql.DB
 func main() {
 	log.Printf("Initializing...\n")
 	log.Printf("Connecting to database '%s'\n", os.Getenv("DATABASE_URL"))
-	db, err := sql.Open("postgres", os.Getenv("DATABASE_URL"))
-	if err != nil {
-		log.Fatal(err)
-	}
+	db, _ = sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	if err != nil {
 		log.Fatal(err)
@@ -42,28 +40,28 @@ func main() {
 	m.Up()
 
 	schema, err := graphql.NewSchema(graphql.SchemaConfig{
-		Query:    QueryType,
-		Mutation: MutationType,
+		Query: QueryType,
+		// Mutation: MutationType,
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	handler := handler.New(&handler.Config{
+		Schema:   &schema,
+		GraphiQL: true,
+	})
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
-	http.HandleFunc("/", hello)
-	http.Handle("/graphql", handler(schema))
+	http.Handle("/graphql", handler)
 	log.Printf("Starting listener on port %s\n", port)
 	err = http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func hello(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprintln(res, "Hello World!")
 }
 
 type migrationLogger struct {
@@ -76,21 +74,4 @@ func (m migrationLogger) Printf(format string, v ...interface{}) {
 
 func (m migrationLogger) Verbose() bool {
 	return m.verbose
-}
-
-func handler(schema graphql.Schema) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		query, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		result := graphql.Do(graphql.Params{
-			Schema:        schema,
-			RequestString: string(query),
-		})
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(result)
-	}
 }

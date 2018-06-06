@@ -32,6 +32,12 @@
   version = "v0.7.5"
 
 [[projects]]
+  name = "github.com/graphql-go/handler"
+  packages = ["."]
+  revision = "f0393b2c10daeebea900292b8e092e73475399d9"
+  version = "v0.2.1"
+
+[[projects]]
   branch = "master"
   name = "github.com/lib/pq"
   packages = [
@@ -43,6 +49,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "b3a8ae580f15512bc722ad632de47a04341603328c3acd8781f298a9c01f53c7"
+  inputs-digest = "1c82b1e5e957c070bd58fb08baa4280dae5199b411cfde333c3f25f90a5b7c14"
   solver-name = "gps-cdcl"
   solver-version = 1
