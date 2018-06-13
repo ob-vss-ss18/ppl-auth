@@ -1,9 +1,10 @@
-package main
+package api
 
 import (
 	"strconv"
 
 	"github.com/graphql-go/graphql"
+	"github.com/ob-vss-ss18/ppl-auth/backend"
 )
 
 var QueryType = graphql.NewObject(graphql.ObjectConfig{
@@ -23,7 +24,7 @@ var QueryType = graphql.NewObject(graphql.ObjectConfig{
 				if err != nil {
 					return nil, err
 				}
-				return GetUserByID(id)
+				return backend.GetUserByID(id)
 			},
 		},
 	},
