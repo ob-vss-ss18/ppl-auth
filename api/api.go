@@ -11,8 +11,8 @@ var ApiHandler *handler.Handler
 
 func init() {
 	schema, err := graphql.NewSchema(graphql.SchemaConfig{
-		Query: QueryType,
-		// Mutation: MutationType,
+		Query:    QueryType,
+		Mutation: MutationType,
 	})
 	if err != nil {
 		log.Fatal(err)

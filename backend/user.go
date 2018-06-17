@@ -1,8 +1,12 @@
 package backend
 
+import "errors"
+
 type User struct {
 	ID    int    `json:"id"`
 	Email string `json:"email"`
+	Role  string `json:"role"`
+	Token string `json:"token"`
 }
 
 func InsertUser(user *User) error {
@@ -34,4 +38,8 @@ func GetUserByID(id int) (*User, error) {
 func RemoveUserByID(id int) error {
 	_, err := db.Exec("DELETE FROM users WHERE id=$1", id)
 	return err
+}
+
+func LoginPwd(email string, password string) (*User, error) {
+	return nil, errors.New("Not implemented")
 }
