@@ -1,6 +1,10 @@
 package backend
 
-import "errors"
+import (
+	"errors"
+
+	"golang.org/x/crypto/bcrypt"
+)
 
 type User struct {
 	ID    int    `json:"id"`
@@ -40,6 +44,23 @@ func RemoveUserByID(id int) error {
 	return err
 }
 
-func LoginPwd(email string, password string) (*User, error) {
-	return nil, errors.New("Not implemented")
+func generateToken(userID int) (*User, error) {
+	return nil, errors.New("generateToken not implemented")
+}
+
+func LoginPwd(email string, passwd string) (*User, error) {
+	var id int
+	var hash string
+	err := db.QueryRow(`SELECT users.user_id, password.password
+		FROM users
+		INNER JOIN password
+		ON users.user_id = password.user_id
+		WHERE users.email=$1 AND users.role IN ('staff', 'owner')`, email).Scan(&id, &hash)
+	if err != nil {
+		return nil, err
+	}
+	if err = bcrypt.CompareHashAndPassword([]byte(hash), []byte(passwd)); err != nil {
+		return nil, errors.New("Wrong password")
+	}
+	return generateToken(id)
 }
