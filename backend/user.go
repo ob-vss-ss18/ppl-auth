@@ -97,3 +97,19 @@ func LoginPwd(email string, passwd string) (*User, error) {
 	}
 	return generateToken(id, 7*24*60*60)
 }
+
+func RequestToken(email string) (bool, error) {
+	var id int
+	err := db.QueryRow(`SELECT users.user_id
+		FROM users
+		WHERE users.email = $1`, email).Scan(&id)
+	if err != nil {
+		return false, err
+	}
+	_, err = generateToken(id, 30*60)
+	if err == nil {
+		return true, err
+	} else {
+		return false, err
+	}
+}
