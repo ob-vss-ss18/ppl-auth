@@ -134,3 +134,20 @@ func RequestToken(email string) (bool, error) {
 		return false, err
 	}
 }
+
+func ValidateToken(email string, token string) (*User, error) {
+	var user User
+	var expiryDate int64
+	err := db.QueryRow(`SELECT users.user_id, users.email, users.role, token.token, token.expiry_date
+		FROM token
+		INNER JOIN users
+		ON token.user_id = users.user_id
+		WHERE  token.token = $1`, token).Scan(&user.ID, &user.Email, &user.Role, &user.Token, &expiryDate)
+	if err != nil {
+		return nil, err
+	}
+	if time.Now().UTC().Unix() >= expiryDate {
+		return nil, errors.New("Token expired")
+	}
+	return &user, nil
+}
