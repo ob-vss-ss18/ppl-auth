@@ -47,6 +47,21 @@
   revision = "0677bdde3e15a69060c33fac24fd53044b4694b8"
 
 [[projects]]
+  name = "github.com/sendgrid/rest"
+  packages = ["."]
+  revision = "306b9bef57dc36f3435ccfcc08fe6ae2c6920344"
+  version = "v2.4.1"
+
+[[projects]]
+  name = "github.com/sendgrid/sendgrid-go"
+  packages = [
+    ".",
+    "helpers/mail"
+  ]
+  revision = "8caf17aa96b4a98bae8bd216878dd50ff12897b5"
+  version = "v3.4.1"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
   packages = [
@@ -58,6 +73,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4e4590d545aa660018370eaa808c144000d4c714a70f28108b63a9cfa6da5aab"
+  inputs-digest = "f5bcf44d9b6a1be4ffa4fdf2394196ddd4c9fb3b0e6949184258ee6795761650"
   solver-name = "gps-cdcl"
   solver-version = 1
