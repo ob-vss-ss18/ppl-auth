@@ -4,8 +4,12 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
+	"log"
+	"os"
 	"time"
 
+	sendgrid "github.com/sendgrid/sendgrid-go"
+	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -81,6 +85,22 @@ func generateToken(userID int, validFor int) (*User, error) {
 	return &user, nil
 }
 
+func sendTokenMail(email string, token string) {
+	from := mail.NewEmail("Peak Power Leasing", "mail@peakpowerleasing.de")
+	subject := "Your Peak Power Leasing Token"
+	to := mail.NewEmail(email, email)
+	content := mail.NewContent("text/plain", "Your temporary Peak Power Leasing Login token is:\n\n"+token)
+	m := mail.NewV3MailInit(from, subject, to, content)
+
+	request := sendgrid.GetRequest(os.Getenv("SENDGRID_API_KEY"), "/v3/mail/send", "https://api.sendgrid.com")
+	request.Method = "POST"
+	request.Body = mail.GetRequestBody(m)
+	_, err := sendgrid.API(request)
+	if err != nil {
+		log.Println("Error while sending mail:", err)
+	}
+}
+
 func LoginPwd(email string, passwd string) (*User, error) {
 	var id int
 	var hash string
@@ -106,8 +126,9 @@ func RequestToken(email string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	_, err = generateToken(id, 30*60)
+	user, err := generateToken(id, 30*60)
 	if err == nil {
+		sendTokenMail(user.Email, user.Token)
 		return true, err
 	} else {
 		return false, err
