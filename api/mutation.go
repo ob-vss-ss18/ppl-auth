@@ -26,5 +26,18 @@ var MutationType = graphql.NewObject(graphql.ObjectConfig{
 				return backend.LoginPwd(email, passwd)
 			},
 		},
+		"requestToken": &graphql.Field{
+			Type: graphql.Boolean,
+			Args: graphql.FieldConfigArgument{
+				"email": &graphql.ArgumentConfig{
+					Description: "E-Mail address",
+					Type:        graphql.NewNonNull(graphql.String),
+				},
+			},
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				email := p.Args["email"].(string)
+				return backend.RequestToken(email)
+			},
+		},
 	},
 })
